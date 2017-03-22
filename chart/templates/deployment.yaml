@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}
+  name: {{ .Release.name }}
   namespace: {{ .Release.namespace }}
 spec:
   replicas: 1
