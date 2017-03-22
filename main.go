@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"os"
-	"sync"
 
+	"github.com/arschles/2017-KubeCon-EU/tpr"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
@@ -30,11 +30,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	store := &loggerEventStorage{
-		logger: log.New(os.Stdout, "storage", log.Flags()|log.LshortFile),
-	}
-	log.Printf("watching namespace %s", namespace)
-	if err := runWatchLoop(store, cl, openPodsWatcher(cl, namespace)); err != nil {
+	log.Printf("watching namespace %s for backup TPRs", namespace)
+	backupTPRWatchFunc := tpr.NewBackupWatcher(cl.Core().RESTClient(), namespace)
+	if err := runWatchLoop(
+		log.New(os.Stdout, "storage", 0),
+		cl,
+		backupTPRWatchFunc,
+	); err != nil {
 		log.Fatalf("error running watch loop (%s)", err)
 	}
 }
