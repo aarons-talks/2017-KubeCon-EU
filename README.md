@@ -5,13 +5,13 @@ Code for KubeCon EU 2017
 Install the watcher to your cluster with the following command:
 
 ```console
-helm install --name=kubecon-watcher --namespace=default ./charts/watcher
+helm install --name=kubecon-watcher --namespace=default --set docker.tag=c0ffcab ./charts/watcher
 ```
 
 Then, tell the watcher to back up all pods with the following command:
 
 ```console
-helm install --name=kubecon-backup --namespace=default --set docker.tag=c0ffcab ./charts/backup
+helm install --name=kubecon-backup --namespace=default ./charts/backup
 ```
 
 To clean up:
