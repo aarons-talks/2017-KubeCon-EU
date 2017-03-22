@@ -1,5 +1,5 @@
 FROM debian:stable-slim
 
-CMD /bin
+CMD /usr/local/bin/watcher
 
-ADD bin/watcher /bin
+ADD bin/watcher /usr/local/bin
