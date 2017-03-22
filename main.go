@@ -9,6 +9,10 @@ import (
 	"k8s.io/client-go/rest"
 )
 
+const (
+	namespace = "default"
+)
+
 func init() {
 	log.SetFlags(log.Flags() | log.Lshortfile)
 }
@@ -32,6 +36,6 @@ func main() {
 		mut:       new(sync.RWMutex),
 		writer:    os.Stdout,
 	}
-	podIface := cl.Core().Pods("")
-	log.Fatal(runWatchLoop(podIface, store))
+	log.Printf("watching namespace %s", namespace)
+	log.Fatal(runWatchLoop(store, openPodsWatcher(cl, namespace)))
 }
