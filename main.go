@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"sync"
 
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -25,7 +26,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	store := &writerStorage{writer: os.Stdout}
+	store := &writerStorage{
+		buf:       nil,
+		maxBufLen: 2,
+		mut:       new(sync.RWMutex),
+		writer:    os.Stdout,
+	}
 	podIface := cl.Core().Pods("")
 	log.Fatal(runWatchLoop(podIface, store))
 }
