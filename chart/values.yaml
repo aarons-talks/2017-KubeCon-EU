@@ -1,4 +1,4 @@
 docker:
   fullImageName: quay.io/arschles/2017-kubecon-eu-watcher
-  tag: 8e6378d
+  tag: 05ca9a7
   pullPolicy: Never
