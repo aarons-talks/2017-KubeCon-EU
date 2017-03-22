@@ -1,0 +1,7 @@
+name: kubecon-watcher
+home: https://github.com/arschles/2017-KubeCon-EU
+version: 0.0.1
+description: An example of a program that uses client-go to watch for changes to pods
+maintainers:
+  - name: Aaron Schlesinger
+    email: arschles+kubeconeu2017@gmail.com

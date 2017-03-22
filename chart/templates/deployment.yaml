@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kubecon-watcher
+  namespace: {{ .Release.namespace }}
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: kubecon-watcher
+  template:
+    metadata:
+      labels:
+        app: kubecon-watcher
+    spec:
+      containers:
+        - name: kubecon-watcher
+          image: "{{ .Values.docker.fullImageName }}:{{ .Values.docker.tag }}"
+          imagePullPolicy: "{{ .Values.docker.pullPolicy }}"
