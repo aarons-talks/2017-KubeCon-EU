@@ -6,9 +6,12 @@ import (
 )
 
 const (
+	backupTPRName = "Backup"
 	backupURLName = "backups"
-	groupName     = "kubeconeu.deis.com"
-	tprVersion    = "v1alpha1"
+	// GroupName is the group name for the backup TPR
+	GroupName = "kubeconeu.deis.com"
+	// Version is the version of the backup TPR
+	Version = "v1alpha1"
 )
 
 // Backup is the TPR for backing up a cluster's state

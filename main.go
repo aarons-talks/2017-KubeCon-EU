@@ -30,8 +30,13 @@ func main() {
 		os.Exit(1)
 	}
 
+	dynCl, err := newDynamicClient(*cfg)
+	if err != nil {
+		log.Printf("Error creating a dynamic client (%s)", err)
+		os.Exit(1)
+	}
 	log.Printf("watching namespace %s for backup TPRs", namespace)
-	backupTPRWatchFunc := tpr.NewBackupWatcher(cl.Core().RESTClient(), namespace)
+	backupTPRWatchFunc := tpr.NewBackupWatcher(dynCl, namespace)
 	if err := runWatchLoop(cl, backupTPRWatchFunc); err != nil {
 		log.Fatalf("error running watch loop (%s)", err)
 	}

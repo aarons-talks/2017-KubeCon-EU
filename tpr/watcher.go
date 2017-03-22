@@ -4,33 +4,35 @@ import (
 	"encoding/json"
 	"log"
 
+	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/pkg/api/unversioned"
+	"k8s.io/client-go/pkg/runtime"
 	"k8s.io/client-go/pkg/watch"
-	"k8s.io/client-go/rest"
 )
 
 // NewBackupWatcher returns a function that watches all Backup TPRs in a given namespace
-func NewBackupWatcher(restClient rest.Interface, ns string) func() (watch.Interface, error) {
+func NewBackupWatcher(cl *dynamic.Client, ns string) func() (watch.Interface, error) {
 	return func() (watch.Interface, error) {
-		req := restClient.Get().AbsPath(
-			"apis",
-			groupName,
-			tprVersion,
-			"watch",
-			"namespaces",
-			ns,
-			backupURLName,
-		)
-		watchIface, err := req.Watch()
+		resource := &unversioned.APIResource{
+			Name:       backupURLName,
+			Namespaced: true,
+			Kind:       backupTPRName,
+		}
+		iface, err := cl.Resource(resource, ns).Watch(&Backup{})
 		if err != nil {
 			return nil, err
 		}
-		return watch.Filter(watchIface, watchFilterer(ns)), nil
+		return watch.Filter(iface, watchFilterer()), nil
 	}
 }
 
-func watchFilterer(ns string) func(watch.Event) (watch.Event, bool) {
+func watchFilterer() func(watch.Event) (watch.Event, bool) {
 	return func(in watch.Event) (watch.Event, bool) {
-		b, err := json.Marshal(in.Object)
+		unstruc, ok := in.Object.(*runtime.Unstructured)
+		if !ok {
+			log.Printf("Not an unstructured")
+		}
+		b, err := json.Marshal(unstruc.Object)
 		if err != nil {
 			log.Printf("Error marshaling %#v (%s)", in.Object, err)
 			return in, false
