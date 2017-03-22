@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 
 	"k8s.io/client-go/kubernetes"
@@ -13,7 +14,12 @@ func backupPods(cl *kubernetes.Clientset) error {
 		return err
 	}
 	for i, pod := range pods.Items {
-		log.Printf("-----\npod %d:\n%#v\n\n", i, pod)
+		b, err := json.Marshal(&pod)
+		if err != nil {
+			log.Printf("error formatting pod %d, continuing (%s)", i, err)
+			continue
+		}
+		log.Printf("-----\nPod %d\n%s\n\n", i, string(b))
 	}
 	return nil
 }
