@@ -22,7 +22,7 @@ func runWatchLoop(
 		}
 		defer watcher.Stop()
 		watchCh := watcher.ResultChan()
-		// receive on watchCh until it is closed
+		// receive on watchCh until it's closed
 		for evt := range watchCh {
 			log.Printf("received event %#v", evt)
 			backup, ok := evt.Object.(*tpr.Backup)

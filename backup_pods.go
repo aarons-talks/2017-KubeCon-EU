@@ -8,6 +8,7 @@ import (
 	"k8s.io/client-go/pkg/api/v1"
 )
 
+// just fetch all pods, marshal them into JSON, and print them out
 func backupPods(cl *kubernetes.Clientset) error {
 	pods, err := cl.CoreV1().Pods("").List(v1.ListOptions{})
 	if err != nil {

@@ -6,7 +6,9 @@ import (
 )
 
 const (
+	// the name of the "Kind" field in new Backup resources
 	backupTPRName = "Backup"
+	// the value for the path in URLs to fetch Backup resources
 	backupURLName = "backups"
 	// GroupName is the group name for the backup TPR
 	GroupName = "kubeconeu.deis.com"
