@@ -1,4 +1,4 @@
-apiVersion: kubecon.deis.com/v1alpha1
+apiVersion: kubeconeu.deis.com/v1alpha1
 kind: Backup
 metadata:
   name: pods
