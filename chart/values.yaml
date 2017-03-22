@@ -1,3 +1,4 @@
+name: kubecon-watcher
 docker:
   fullImageName: quay.io/arschles/2017-kubecon-eu-watcher
   tag: 05ca9a7
