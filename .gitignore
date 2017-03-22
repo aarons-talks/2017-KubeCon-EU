@@ -24,3 +24,4 @@ _testmain.go
 *.prof
 .DS_Store
 2017-KubeCon-EU
+rootfs/bin/watcher
