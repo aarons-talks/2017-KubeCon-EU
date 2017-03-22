@@ -13,7 +13,7 @@ func backupPods(cl *kubernetes.Clientset) error {
 		return err
 	}
 	for i, pod := range pods.Items {
-		log.Printf("pod %d:\n%#v", i, pod)
+		log.Printf("-----\npod %d:\n%#v\n\n", i, pod)
 	}
 	return nil
 }
