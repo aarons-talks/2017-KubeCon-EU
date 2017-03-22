@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sleeper
+  namespace: default
+spec:
+  containers:
+  - image: debian:stable-slim
+    imagePullPolicy: Always
+    name: sleeper
