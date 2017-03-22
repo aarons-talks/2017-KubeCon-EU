@@ -11,7 +11,7 @@ helm install --name=kubecon-watcher --namespace=default ./charts/watcher
 Then, tell the watcher to back up all pods with the following command:
 
 ```console
-helm install --name=kubecon-backup --namespace=default ./charts/backup
+helm install --name=kubecon-backup --namespace=default --set docker.tag=c0ffcab ./charts/backup
 ```
 
 To clean up:
