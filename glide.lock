@@ -1,8 +1,6 @@
-hash: f95a79ee4ccf2da1da0a22642ec91002788496b45d4fffaf4a4f29e6d6f4dd54
-updated: 2017-03-21T17:05:41.934359445-07:00
+hash: 8d38ff335023ac2e7722ca4360180f9ba0dae5535cb739f07ba9871cce760787
+updated: 2017-03-21T17:29:16.339150691-07:00
 imports:
-- name: k8s.io/apimachinery
-  version: 75b8dd260ef0469d96d578705a87cffd0e09dab8
 - name: k8s.io/client-go
   version: e121606b0d09b2e1c467183ee46217fa85a6b672
 testImports: []
