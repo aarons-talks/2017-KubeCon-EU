@@ -4,4 +4,4 @@ metadata:
   name: backup.kubeconeu.deis.com
 description: A resource to tell a controller to backup some cluster state
 versions:
-- v1alpha1
+- name: v1alpha1
