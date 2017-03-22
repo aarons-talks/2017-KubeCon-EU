@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"os"
-	"sync"
 
+	"github.com/arschles/2017-KubeCon-EU/tpr"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 )
@@ -30,12 +30,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	store := &writerStorage{
-		buf:       nil,
-		maxBufLen: 2,
-		mut:       new(sync.RWMutex),
-		writer:    os.Stdout,
+	dynCl, err := newDynamicClient(*cfg)
+	if err != nil {
+		log.Printf("Error creating a dynamic client (%s)", err)
+		os.Exit(1)
 	}
-	log.Printf("watching namespace %s", namespace)
-	log.Fatal(runWatchLoop(store, openPodsWatcher(cl, namespace)))
+	log.Printf("watching namespace %s for backup TPRs", namespace)
+	backupTPRWatchFunc := tpr.NewBackupWatcher(dynCl, namespace)
+	if err := runWatchLoop(cl, backupTPRWatchFunc); err != nil {
+		log.Fatalf("error running watch loop (%s)", err)
+	}
 }
