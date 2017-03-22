@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/pkg/api/v1"
 )
@@ -10,7 +12,7 @@ func backupPods(cl *kubernetes.Clientset) error {
 	if err != nil {
 		return err
 	}
-	for i, pod := range pods {
+	for i, pod := range pods.Items {
 		log.Printf("pod %d:\n%#v", i, pod)
 	}
 	return nil
