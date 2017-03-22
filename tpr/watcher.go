@@ -1,6 +1,9 @@
 package tpr
 
 import (
+	"encoding/json"
+	"log"
+
 	"k8s.io/client-go/pkg/watch"
 	"k8s.io/client-go/rest"
 )
@@ -17,31 +20,27 @@ func NewBackupWatcher(restClient rest.Interface, ns string) func() (watch.Interf
 			ns,
 			backupURLName,
 		)
-		return req.Watch()
+		watchIface, err := req.Watch()
+		if err != nil {
+			return nil, err
+		}
+		return watch.Filter(watchIface, watchFilterer(ns)), nil
 	}
 }
 
-// func watchFilterer(t *store, ns string) func(watch.Event) (watch.Event, bool) {
-// 	return func(in watch.Event) (watch.Event, bool) {
-// 		encodedBytes, err := runtime.Encode(t.codec, in.Object)
-// 		if err != nil {
-// 			glog.Errorf("couldn't encode watch event object (%s)", err)
-// 			return watch.Event{}, false
-// 		}
-// 		finalObj := t.singularShell("", "")
-// 		if err := decode(t.codec, nil, encodedBytes, finalObj); err != nil {
-// 			glog.Errorf("couldn't decode watch event bytes (%s)", err)
-// 			return watch.Event{}, false
-// 		}
-// 		if !t.hasNamespace {
-// 			if err := removeNamespace(finalObj); err != nil {
-// 				glog.Errorf("couldn't remove namespace from %#v (%s)", finalObj, err)
-// 				return watch.Event{}, false
-// 			}
-// 		}
-// 		return watch.Event{
-// 			Type:   in.Type,
-// 			Object: finalObj,
-// 		}, true
-// 	}
-// }
+func watchFilterer(ns string) func(watch.Event) (watch.Event, bool) {
+	return func(in watch.Event) (watch.Event, bool) {
+		b, err := json.Marshal(in.Object)
+		if err != nil {
+			log.Printf("Error marshaling %#v (%s)", in.Object, err)
+			return in, false
+		}
+		backup := new(Backup)
+		if err := json.Unmarshal(b, backup); err != nil {
+			log.Printf("Error unmarshaling %s (%s)", string(b), err)
+			return in, false
+		}
+		in.Object = backup
+		return in, true
+	}
+}
