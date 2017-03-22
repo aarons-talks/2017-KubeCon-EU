@@ -8,7 +8,11 @@ import (
 	"k8s.io/client-go/pkg/watch"
 )
 
-func runWatchLoop(store storage, openWatcher func() (watch.Interface, error)) error {
+func runWatchLoop(
+	eventStore eventStorage,
+	cl kubernetes.Clientset,
+	openWatcher func() (watch.Interface, error),
+) error {
 	// loop forever. inside of each loop iteration, open a new watcher, get its watch chan, and
 	// listen on that chan
 	for {
@@ -20,8 +24,7 @@ func runWatchLoop(store storage, openWatcher func() (watch.Interface, error)) er
 		watchCh := watcher.ResultChan()
 		// receive on watchCh until it is closed
 		for evt := range watchCh {
-			log.Printf("got event %#v", evt)
-			if err := store.Append(evt); err != nil {
+			if err := eventStore.Append(evt); err != nil {
 				log.Printf("Error appending event %#v (%s)", evt, err)
 			}
 		}

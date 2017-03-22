@@ -30,12 +30,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	store := &writerStorage{
-		buf:       nil,
-		maxBufLen: 2,
-		mut:       new(sync.RWMutex),
-		writer:    os.Stdout,
+	store := &loggerEventStorage{
+		logger: log.New(os.Stdout, "storage", log.Flags()|log.LshortFile),
 	}
 	log.Printf("watching namespace %s", namespace)
-	log.Fatal(runWatchLoop(store, openPodsWatcher(cl, namespace)))
+	if err := runWatchLoop(store, cl, openPodsWatcher(cl, namespace)); err != nil {
+		log.Fatalf("error running watch loop (%s)", err)
+	}
 }
