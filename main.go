@@ -32,11 +32,7 @@ func main() {
 
 	log.Printf("watching namespace %s for backup TPRs", namespace)
 	backupTPRWatchFunc := tpr.NewBackupWatcher(cl.Core().RESTClient(), namespace)
-	if err := runWatchLoop(
-		log.New(os.Stdout, "storage", 0),
-		cl,
-		backupTPRWatchFunc,
-	); err != nil {
+	if err := runWatchLoop(cl, backupTPRWatchFunc); err != nil {
 		log.Fatalf("error running watch loop (%s)", err)
 	}
 }
